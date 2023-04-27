@@ -20,7 +20,9 @@ require 'src/states/BaseState'
 require 'src/states/StateStack'
 
 require 'src/states/game/DialogueState'
+require 'src/states/game/EnemyTurnState'
 require 'src/states/game/PlayState'
+require 'src/states/game/PlayerTurnState'
 require 'src/states/game/StartState'
 
 require 'src/states/world/Gameboard'
