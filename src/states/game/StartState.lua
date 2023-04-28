@@ -11,8 +11,8 @@ function StartState:update(dt)
         gStateStack:push(PlayState())
         gStateStack:push(DialogueState("" .. 
             "This is Wizard Emblem. You control a team of wizards with one goal: "..
-            "to defeat the enemy wizards! To move, use the arrow keys to select the "..
-            "tile you'd like to move to, then press Enter. Press Space to skip dialogue. "..
+            "to defeat the enemy wizards! To move, select a player and use the arrow "..
+            "keys to select a tile to move to, then press Enter. Press Space to skip dialogue. "..
             "Good luck!"
         ))
     end

@@ -3,7 +3,7 @@ EnemyTurnState = Class{__includes = BaseState}
 function EnemyTurnState:init()
 end
 
-function PlayerTurnState:enter()
+function EnemyTurnState:enter()
 	gStateStack:push(DialogueState("Enemy Turn"))
 end
 

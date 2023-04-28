@@ -1,10 +1,11 @@
 PlayerTurnState = Class{__includes = BaseState}
 
 function PlayerTurnState:init(firstWizard, secondWizard, thirdWizard)
-	-- position in the battle grid which we're highlighting
+	-- position in the battle grid we're highlighting
 	self.boardHighlightX = 0
 	self.boardHighlightY = 0
 
+	-- define wizards and allow movement by default
 	self.firstWizard = firstWizard
 	self.firstWizard.canMove = true
 	self.secondWizard = secondWizard
@@ -12,6 +13,8 @@ function PlayerTurnState:init(firstWizard, secondWizard, thirdWizard)
 	self.thirdWizard = thirdWizard
 	self.thirdWizard.canMove = true
 
+	-- Initialize variables for tracking movement
+	self.selectedWizard = nil
 	self.numWizardsMoved = 0
 end
 
@@ -31,13 +34,47 @@ function PlayerTurnState:update(dt)
 		self.boardHighlightX = math.min(VIRTUAL_WIDTH - 16, self.boardHighlightX + 1)
 	end
 
-	-- TODO: watch for selection of player wizard (make sure wizard selected is player,
-		-- move to position selected)
+	-- Move wizards
+	if love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter') then
+		if self.selectedWizard ~= nil and self:checkBounds(self.selectedWizard.mapX, self.selectedWizard.mapY, self.boardHighlightX + 1, self.boardHighlightY + 1) then
+			self.selectedWizard.mapX = self.boardHighlightX + 1
+			self.selectedWizard.mapY = self.boardHighlightY + 1
+			self.selectedWizard.x = (self.selectedWizard.mapX - 1) * TILE_SIZE
+			self.selectedWizard.y = (self.selectedWizard.mapY - 1) * TILE_SIZE - self.selectedWizard.height / 2
+			self.numWizardsMoved = self.numWizardsMoved + 1
+			self.selectedWizard.canMove = false
+			self.selectedWizard = nil
+		elseif self:checkMovability(self.firstWizard) then
+			self.selectedWizard = self.firstWizard
+		elseif self:checkMovability(self.secondWizard) then
+			self.selectedWizard = self.secondWizard
+		elseif self:checkMovability(self.thirdWizard) then
+			self.selectedWizard = self.thirdWizard
+		end
+	end
   
 	if self.numWizardsMoved == 3 then
+		print('Three wizards moved')
 		gStateStack:pop()
 		gStateStack:push(EnemyTurnState())
-	end 
+	end
+end
+
+function PlayerTurnState:checkMovability(wizard)
+	if self.boardHighlightX + 1 == wizard.mapX and self.boardHighlightY + 1 == wizard.mapY and wizard.canMove then
+		return true
+	else
+		return false
+	end
+end
+
+function PlayerTurnState:checkBounds(currentX, currentY, newX, newY)
+	print(currentX, currentY, newX, newY)
+	if newX >= currentX - 2 and newX <= currentX + 2 and newY >= currentY - 2 and newY <= currentY + 2 then
+		return true
+	else
+		return false
+	end
 end
 
 function PlayerTurnState:render()
