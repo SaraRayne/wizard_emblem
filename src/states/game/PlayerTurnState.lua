@@ -82,4 +82,16 @@ function PlayerTurnState:render()
 	love.graphics.setLineWidth(1)
 	love.graphics.rectangle('line', self.boardHighlightX * 16,
 		self.boardHighlightY * 16, 16, 16, 1)
+
+	-- highlight tiles player can move to
+	if self.selectedWizard then
+		local allowedX = {self.selectedWizard.mapX, math.min(self.selectedWizard.mapX + 1, VIRTUAL_WIDTH - 16), math.min(self.selectedWizard.mapX + 2, VIRTUAL_WIDTH - 16), math.max(0, self.selectedWizard.mapX - 1), math.max(0, self.selectedWizard.mapX - 2)}
+		local allowedY = {self.selectedWizard.mapY, math.min(self.selectedWizard.mapY + 1, VIRTUAL_HEIGHT), math.min(self.selectedWizard.mapY + 2, VIRTUAL_HEIGHT), math.max(0, self.selectedWizard.mapY - 1), math.max(0, self.selectedWizard.mapY - 2)}
+		for i, xValue in pairs(allowedX) do
+			for k, yValue in pairs(allowedY) do
+				love.graphics.setColor(255, 255, 255, 0.15)
+				love.graphics.rectangle("fill", (xValue - 1) * 16, (yValue - 1) * 16, 16, 16, 1)
+			end
+		end
+	end
 end

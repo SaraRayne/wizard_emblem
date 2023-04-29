@@ -38,14 +38,21 @@ function EnemyTurnState:moveEnemy(enemy)
 
 	x, y = self:findClosestTileToPlayer(enemy, closestPlayer)
 
-	-- Move to closest tile
-	enemy.mapX = x
-	enemy.mapY = y
-	enemy.x = (enemy.mapX - 1) * TILE_SIZE
-	enemy.y = (enemy.mapY - 1) * TILE_SIZE - enemy.height / 2
-	self.numWizardsMoved = self.numWizardsMoved + 1
-
-	-- TODO: if one of the possible tiles enemy can move to is a tile a player is on, move there and initiate combat
+	if self:checkCollision(x, y, players) then
+		-- TODO: initialize combat instead of moving; only move to that same tile if defeat player; else move next to
+		enemy.mapX = x
+		enemy.mapY = y
+		enemy.x = (enemy.mapX - 1) * TILE_SIZE
+		enemy.y = (enemy.mapY) * TILE_SIZE - enemy.height / 2
+		self.numWizardsMoved = self.numWizardsMoved + 1
+	else
+		-- Move to closest tile
+		enemy.mapX = x
+		enemy.mapY = y
+		enemy.x = (enemy.mapX - 1) * TILE_SIZE
+		enemy.y = (enemy.mapY) * TILE_SIZE - enemy.height / 2
+		self.numWizardsMoved = self.numWizardsMoved + 1
+	end
 end
 
 function EnemyTurnState:findClosestPlayer(enemy, players)
@@ -56,7 +63,7 @@ function EnemyTurnState:findClosestPlayer(enemy, players)
 	for i, v in pairs(players) do
 		local diffX = math.abs(v.mapX - enemy.mapX)
 		local diffY = math.abs(v.mapY - enemy.mapY)
-		if diffX < lowestX and diffY < lowestY then
+		if diffX <= lowestX and diffY <= lowestY then
 			closestPlayer = v
 			lowestX = diffX 
 			lowestY = diffY
@@ -93,6 +100,15 @@ function EnemyTurnState:findClosestTileToPlayer(enemy, closestPlayer)
 	end
 
 	return xPos, yPos
+end
+
+function EnemyTurnState:checkCollision(x, y, players)
+	for i, player in pairs(players) do
+		if x == player.mapX and y == player.mapY then
+			return player
+		end
+	end
+	return nil
 end
 
 function EnemyTurnState:render()
