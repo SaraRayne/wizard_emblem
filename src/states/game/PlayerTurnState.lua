@@ -1,6 +1,7 @@
 PlayerTurnState = Class{__includes = BaseState}
 
-function PlayerTurnState:init(firstWizard, secondWizard, thirdWizard)
+function PlayerTurnState:init(firstWizard, secondWizard, thirdWizard, playState)
+	self.playState = playState
 	-- position in the battle grid we're highlighting
 	self.boardHighlightX = 0
 	self.boardHighlightY = 0
@@ -54,9 +55,8 @@ function PlayerTurnState:update(dt)
 	end
   
 	if self.numWizardsMoved == 3 then
-		print('Three wizards moved')
 		gStateStack:pop()
-		gStateStack:push(EnemyTurnState())
+		self.playState.turn = 'enemy'
 	end
 end
 
@@ -69,7 +69,6 @@ function PlayerTurnState:checkMovability(wizard)
 end
 
 function PlayerTurnState:checkBounds(currentX, currentY, newX, newY)
-	print(currentX, currentY, newX, newY)
 	if newX >= currentX - 2 and newX <= currentX + 2 and newY >= currentY - 2 and newY <= currentY + 2 then
 		return true
 	else
