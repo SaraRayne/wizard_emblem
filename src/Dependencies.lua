@@ -9,16 +9,19 @@ require 'src/StateMachine'
 require 'src/Util'
 
 require 'src/entity/entity_defs'
+require 'src/entity/wizard_defs'
 require 'src/entity/Wizard'
 require 'src/entity/WizardBaseState'
 require 'src/entity/WizardIdle'
 
 require 'src/gui/Panel'
+require 'src/gui/StatBar'
 require 'src/gui/Textbox'
 
 require 'src/states/BaseState'
 require 'src/states/StateStack'
 
+require 'src/states/game/CombatState'
 require 'src/states/game/DialogueState'
 require 'src/states/game/EnemyTurnState'
 require 'src/states/game/PlayState'

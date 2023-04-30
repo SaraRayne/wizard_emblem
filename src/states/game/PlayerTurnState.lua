@@ -2,6 +2,8 @@ PlayerTurnState = Class{__includes = BaseState}
 
 function PlayerTurnState:init(firstWizard, secondWizard, thirdWizard, playState)
 	self.playState = playState
+	self.enemies = {self.playState.gameboard.firstEnemyWizard, self.playState.gameboard.secondEnemyWizard, self.playState.gameboard.thirdEnemyWizard}
+	
 	-- position in the battle grid we're highlighting
 	self.boardHighlightX = 0
 	self.boardHighlightY = 0
@@ -38,13 +40,29 @@ function PlayerTurnState:update(dt)
 	-- Move wizards
 	if love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter') then
 		if self.selectedWizard ~= nil and self:checkBounds(self.selectedWizard.mapX, self.selectedWizard.mapY, self.boardHighlightX + 1, self.boardHighlightY + 1) then
-			self.selectedWizard.mapX = self.boardHighlightX + 1
-			self.selectedWizard.mapY = self.boardHighlightY + 1
-			self.selectedWizard.x = (self.selectedWizard.mapX - 1) * TILE_SIZE
-			self.selectedWizard.y = (self.selectedWizard.mapY - 1) * TILE_SIZE - self.selectedWizard.height / 2
-			self.numWizardsMoved = self.numWizardsMoved + 1
-			self.selectedWizard.canMove = false
-			self.selectedWizard = nil
+			local collidedEnemy = self:checkCollision(self.boardHighlightX + 1, self.boardHighlightY + 1) 
+			if collidedEnemy then
+				-- Move to nearby tile
+				self.selectedWizard.mapX = self.boardHighlightX + 1
+				self.selectedWizard.mapY = self.boardHighlightY
+				self.selectedWizard.x = (self.selectedWizard.mapX - 1) * TILE_SIZE
+				self.selectedWizard.y = (self.selectedWizard.mapY - 1) * TILE_SIZE - self.selectedWizard.height / 2
+				self.numWizardsMoved = self.numWizardsMoved + 1
+				self.selectedWizard.canMove = false
+
+				-- Initiate combat with enemy
+				gStateStack:push(CombatState(self.selectedWizard, collidedEnemy, self.inCombat))
+				self.selectedWizard = nil
+			else
+				-- Move wizard to selected location
+				self.selectedWizard.mapX = self.boardHighlightX + 1
+				self.selectedWizard.mapY = self.boardHighlightY + 1
+				self.selectedWizard.x = (self.selectedWizard.mapX - 1) * TILE_SIZE
+				self.selectedWizard.y = (self.selectedWizard.mapY - 1) * TILE_SIZE - self.selectedWizard.height / 2
+				self.numWizardsMoved = self.numWizardsMoved + 1
+				self.selectedWizard.canMove = false
+				self.selectedWizard = nil
+			end
 		elseif self:checkMovability(self.firstWizard) then
 			self.selectedWizard = self.firstWizard
 		elseif self:checkMovability(self.secondWizard) then
@@ -53,6 +71,10 @@ function PlayerTurnState:update(dt)
 			self.selectedWizard = self.thirdWizard
 		end
 	end
+
+	self.firstWizard:update()
+	self.secondWizard:update()
+	self.thirdWizard:update()
   
 	if self.numWizardsMoved == 3 then
 		gStateStack:pop()
@@ -74,6 +96,15 @@ function PlayerTurnState:checkBounds(currentX, currentY, newX, newY)
 	else
 		return false
 	end
+end
+
+function PlayerTurnState:checkCollision(x, y)
+	for i, enemy in pairs(self.enemies) do
+		if x == enemy.mapX and y == enemy.mapY then
+			return enemy
+		end
+	end
+	return nil
 end
 
 function PlayerTurnState:render()

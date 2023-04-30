@@ -16,9 +16,9 @@ function EnemyTurnState:enter()
 
 	Timer.after(4, function()
 		self:moveEnemy(self.firstEnemy)
-		Timer.after(2, function()
+		Timer.after(3, function()
 			self:moveEnemy(self.secondEnemy)
-			Timer.after(2, function()
+			Timer.after(3, function()
 				self:moveEnemy(self.thirdEnemy)
 			end)
 		end)
@@ -26,6 +26,10 @@ function EnemyTurnState:enter()
 end
 
 function EnemyTurnState:update(dt)
+	self.firstEnemy:update()
+	self.secondEnemy:update()
+	self.thirdEnemy:update()
+
 	if self.numWizardsMoved == 3 then
 		gStateStack:pop()
 		self.playState.turn = 'player'
@@ -38,19 +42,23 @@ function EnemyTurnState:moveEnemy(enemy)
 
 	x, y = self:findClosestTileToPlayer(enemy, closestPlayer)
 
-	if self:checkCollision(x, y, players) then
-		-- TODO: initialize combat instead of moving; only move to that same tile if defeat player; else move next to
+	local collidedPlayer = self:checkCollision(x, y, players)
+
+	if collidedPlayer then
+		-- Move to nearby tile
 		enemy.mapX = x
-		enemy.mapY = y
+		enemy.mapY = y + 1
 		enemy.x = (enemy.mapX - 1) * TILE_SIZE
-		enemy.y = (enemy.mapY) * TILE_SIZE - enemy.height / 2
+		enemy.y = (enemy.mapY - 1) * TILE_SIZE - enemy.height / 2
 		self.numWizardsMoved = self.numWizardsMoved + 1
+
+		gStateStack:push(CombatState(enemy, collidedPlayer))
 	else
 		-- Move to closest tile
 		enemy.mapX = x
 		enemy.mapY = y
 		enemy.x = (enemy.mapX - 1) * TILE_SIZE
-		enemy.y = (enemy.mapY) * TILE_SIZE - enemy.height / 2
+		enemy.y = (enemy.mapY - 1) * TILE_SIZE - enemy.height / 2
 		self.numWizardsMoved = self.numWizardsMoved + 1
 	end
 end

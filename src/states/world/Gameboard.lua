@@ -12,7 +12,8 @@ function Gameboard:init()
         mapY = 3,
         width = 16,
         height = 16,
-		direction = 'down'
+		direction = 'down',
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.secondPlayerWizard = Wizard {
         animations = ENTITY_DEFS['player'].animations,
@@ -20,7 +21,8 @@ function Gameboard:init()
         mapY = 3,
         width = 16,
         height = 16,
-		direction = 'down'
+		direction = 'down',
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.thirdPlayerWizard = Wizard {
         animations = ENTITY_DEFS['player'].animations,
@@ -28,23 +30,21 @@ function Gameboard:init()
         mapY = 3,
         width = 16,
         height = 16,
-		direction = 'down'
+		direction = 'down',
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 
 	self.firstPlayerWizard.stateMachine = StateMachine {
-		-- ['walk'] = function() return PlayerWalkState(self.firstPlayerWizard, self) end,
 		['idle'] = function() return WizardIdleState(self.firstPlayerWizard, self) end
 	}
     self.firstPlayerWizard.stateMachine:change('idle')
 
 	self.secondPlayerWizard.stateMachine = StateMachine {
-		-- ['walk'] = function() return PlayerWalkState(self.firstPlayerWizard, self) end,
 		['idle'] = function() return WizardIdleState(self.secondPlayerWizard, self) end
 	}
     self.secondPlayerWizard.stateMachine:change('idle')
 
 	self.thirdPlayerWizard.stateMachine = StateMachine {
-		-- ['walk'] = function() return PlayerWalkState(self.firstPlayerWizard, self) end,
 		['idle'] = function() return WizardIdleState(self.thirdPlayerWizard, self) end
 	}
     self.thirdPlayerWizard.stateMachine:change('idle')
@@ -54,44 +54,54 @@ function Gameboard:init()
         animations = ENTITY_DEFS['enemy'].animations,
         mapX = 5,
         mapY = 13,
-        width = 32,
-        height = 48,
-		direction = 'up'
+        width = 16,
+        height = 16,
+		direction = 'up',
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.secondEnemyWizard = Wizard {
         animations = ENTITY_DEFS['enemy'].animations,
         mapX = 12,
         mapY = 13,
-        width = 32,
-        height = 48,
-		direction = 'up'
+        width = 16,
+        height = 16,
+		direction = 'up',
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.thirdEnemyWizard = Wizard {
         animations = ENTITY_DEFS['enemy'].animations,
         mapX = 20,
         mapY = 13,
-        width = 32,
-        height = 48,
-		direction = 'up'
+        width = 16,
+        height = 16,
+		direction = 'up',
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 
 	self.firstEnemyWizard.stateMachine = StateMachine {
-		-- ['walk'] = function() return PlayerWalkState(self.firstPlayerWizard, self) end,
 		['idle'] = function() return WizardIdleState(self.firstEnemyWizard, self) end
 	}
     self.firstEnemyWizard.stateMachine:change('idle')
 
 	self.secondEnemyWizard.stateMachine = StateMachine {
-		-- ['walk'] = function() return PlayerWalkState(self.firstPlayerWizard, self) end,
 		['idle'] = function() return WizardIdleState(self.secondEnemyWizard, self) end
 	}
     self.secondEnemyWizard.stateMachine:change('idle')
 
 	self.thirdEnemyWizard.stateMachine = StateMachine {
-		-- ['walk'] = function() return PlayerWalkState(self.firstPlayerWizard, self) end,
 		['idle'] = function() return WizardIdleState(self.thirdEnemyWizard, self) end
 	}
 	self.thirdEnemyWizard.stateMachine:change('idle')
+
+	-- Add all wizards to table
+	self.wizards = {
+		self.firstPlayerWizard,
+		self.secondPlayerWizard,
+		self.thirdPlayerWizard,
+		self.firstEnemyWizard,
+		self.secondEnemyWizard,
+		self.thirdEnemyWizard
+	}
 
 	self:createGrid()
 end
@@ -107,7 +117,6 @@ function Gameboard:createGrid()
 			table.insert(self.tiles[y], Tile(x, y, id))
 		end
 	end
-
 end
 
 function Gameboard:update(dt)
@@ -126,11 +135,8 @@ function Gameboard:render()
             self.tiles[y][x]:render()
         end
     end
-	self.firstPlayerWizard:render()
-	self.secondPlayerWizard:render()
-	self.thirdPlayerWizard:render()
 
-	self.firstEnemyWizard:render()
-	self.secondEnemyWizard:render()
-	self.thirdEnemyWizard:render()
+	for i, wizard in pairs(self.wizards) do
+		wizard:render()
+	end
 end
