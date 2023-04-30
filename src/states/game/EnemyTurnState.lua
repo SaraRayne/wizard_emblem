@@ -2,6 +2,7 @@ EnemyTurnState = Class{__includes = BaseState}
 
 function EnemyTurnState:init(firstEnemy, secondEnemy, thirdEnemy, playState)
 	self.playState = playState
+	self.inCombat = false
 
 	-- define enemy wizards and allow movement by default
 	self.firstEnemy = firstEnemy
@@ -9,35 +10,49 @@ function EnemyTurnState:init(firstEnemy, secondEnemy, thirdEnemy, playState)
 	self.thirdEnemy = thirdEnemy
 
 	self.numWizardsMoved = 0
+	-- self.aliveWizards = self:countAliveWizards({self.firstEnemy, self.secondEnemy, self.thirdEnemy})
 end
 
 function EnemyTurnState:enter()
 	gStateStack:push(DialogueState("Enemy Turn"))
-
-	Timer.after(4, function()
-		self:moveEnemy(self.firstEnemy)
-		Timer.after(3, function()
-			self:moveEnemy(self.secondEnemy)
-			Timer.after(3, function()
-				self:moveEnemy(self.thirdEnemy)
+	Timer.after(2, function() 
+		gStateStack:pop()
+		Timer.after(2, function()
+			self:moveEnemy(self.firstEnemy)
+			Timer.after(2, function()
+				self:moveEnemy(self.secondEnemy)
+				Timer.after(2, function()
+					self:moveEnemy(self.thirdEnemy)
+				end)
 			end)
 		end)
 	end)
 end
 
 function EnemyTurnState:update(dt)
+	aliveWizards = self:countAliveWizards({self.firstEnemy, self.secondEnemy, self.thirdEnemy})
+	if aliveWizards == 0 then
+		gStateStack:pop()
+		gStateStack:push(EndGameState("You win! Press Enter to play again."))
+	end
+
 	self.firstEnemy:update()
 	self.secondEnemy:update()
 	self.thirdEnemy:update()
 
-	if self.numWizardsMoved == 3 then
+	if self.numWizardsMoved == aliveWizards and aliveWizards ~= 0 and self.inCombat == false then
+		print('Player Turn')
 		gStateStack:pop()
 		self.playState.turn = 'player'
 	end 
 end
 
 function EnemyTurnState:moveEnemy(enemy)
-	players = {self.playState.gameboard.firstPlayerWizard, self.playState.gameboard.secondPlayerWizard, self.playState.gameboard.thirdPlayerWizard}
+	if enemy.isAlive == false then
+		return
+	end
+
+	players = self:alivePlayerWizards(self.playState.gameboard.playerWizards)
 	closestPlayer = self:findClosestPlayer(enemy, players)
 
 	x, y = self:findClosestTileToPlayer(enemy, closestPlayer)
@@ -52,7 +67,8 @@ function EnemyTurnState:moveEnemy(enemy)
 		enemy.y = (enemy.mapY - 1) * TILE_SIZE - enemy.height / 2
 		self.numWizardsMoved = self.numWizardsMoved + 1
 
-		gStateStack:push(CombatState(enemy, collidedPlayer))
+		self.inCombat = true
+		gStateStack:push(CombatState(enemy, collidedPlayer, self))
 	else
 		-- Move to closest tile
 		enemy.mapX = x
@@ -112,11 +128,35 @@ end
 
 function EnemyTurnState:checkCollision(x, y, players)
 	for i, player in pairs(players) do
-		if x == player.mapX and y == player.mapY then
+		if x == player.mapX and y == player.mapY and player.isAlive then
 			return player
 		end
 	end
 	return nil
+end
+
+function EnemyTurnState:countAliveWizards(enemyWizards)
+	local aliveCount = 0
+
+	for i, wizard in pairs(enemyWizards) do
+		if wizard.isAlive then
+			aliveCount = aliveCount + 1
+		end
+	end
+
+	return aliveCount
+end
+
+function EnemyTurnState:alivePlayerWizards(playerWizards)
+	local alivePlayers = {}
+
+	for i, wizard in pairs(playerWizards) do
+		if wizard.isAlive then
+			table.insert(alivePlayers, wizard)
+		end
+	end
+
+	return alivePlayers
 end
 
 function EnemyTurnState:render()

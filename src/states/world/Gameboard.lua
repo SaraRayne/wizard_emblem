@@ -94,10 +94,13 @@ function Gameboard:init()
 	self.thirdEnemyWizard.stateMachine:change('idle')
 
 	-- Add all wizards to table
-	self.wizards = {
+	self.playerWizards = {
 		self.firstPlayerWizard,
 		self.secondPlayerWizard,
-		self.thirdPlayerWizard,
+		self.thirdPlayerWizard
+	}
+
+	self.enemyWizards = {
 		self.firstEnemyWizard,
 		self.secondEnemyWizard,
 		self.thirdEnemyWizard
@@ -136,7 +139,15 @@ function Gameboard:render()
         end
     end
 
-	for i, wizard in pairs(self.wizards) do
-		wizard:render()
+	for i, wizard in pairs(self.playerWizards) do
+		if wizard.isAlive then
+			wizard:render()
+		end
+	end
+
+	for i, wizard in pairs(self.enemyWizards) do
+		if wizard.isAlive then
+			wizard:render()
+		end
 	end
 end

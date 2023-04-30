@@ -12,9 +12,10 @@ function StartState:update(dt)
         gStateStack:push(DialogueState("" .. 
             "This is Wizard Emblem. You control a team of wizards with one goal: "..
             "to defeat the enemy wizards! To move, select a player and use the arrow "..
-            "keys to select a tile to move to, then press Enter. Press Space to skip dialogue. "..
-            "Good luck!"
+            "keys to select a tile to move to, then press Enter. Good luck!"
         ))
+        -- Pop dialogue state after a few seconds
+        Timer.after(4, function() gStateStack:pop() end)
     end
 end
 

@@ -1,8 +1,9 @@
 CombatState = Class{__includes = BaseState}
 
-function CombatState:init(attacker, foe)
+function CombatState:init(attacker, foe, turnState)
 	self.attacker = attacker
 	self.foe = foe
+	self.turnState = turnState
 end
 
 function CombatState:enter()
@@ -16,31 +17,37 @@ function CombatState:enter()
 		})
 		:finish(function()
 			self.foe:takeDamage(damageToFoe)
-		end)
 
-		-- TODO: call check for death; if death is true, print dead and exit (pop);
-			-- later have blinking animation and get rid of dead player
-			-- might need to alter generation of players; add to a table and in gameboard, generate all in table?
-			-- when dead, remove from table
+			if self:checkForDeath(self.foe) then
+				print('Foe Died')
+				Timer.after(2, function() 
+					self.foe.isAlive = false
+					self.turnState.inCombat = false
+					gStateStack:pop()
+				end)
+			else
+				-- Call calculate damage from foe to attacker
+				local damageToAttacker = self:calculateDamage(self.foe, self.attacker)
+		
+				Timer.after(1.5, function()
+					-- Apply damage
+					Timer.tween(0.5, {
+						[self.attacker.healthBar] = {value = self.attacker.health - damageToAttacker}
+					})
+					:finish(function()
+						self.attacker:takeDamage(damageToAttacker)
 
-		-- Call calculate damage from foe to attacker
-		local damageToAttacker = self:calculateDamage(self.foe, self.attacker)
-
-		Timer.after(1.5, function()
-			-- Apply damage
-			Timer.tween(0.5, {
-				[self.attacker.healthBar] = {value = self.attacker.health - damageToAttacker}
-			})
-			:finish(function()
-				self.attacker:takeDamage(damageToAttacker)
-			end)
-
-			-- TODO: call check for death; if death is true, print dead and exit;
-				-- later have blinking animation and get rid of dead player
-				-- might need to alter generation of players; add to a table and in gameboard, generate all in table?
-				-- when dead, remove from table
-			-- TODO: pop after checking for deaths
-			gStateStack:pop()
+						Timer.after(2, function() 
+							if self:checkForDeath(self.attacker) then
+								print('Attacker Died')
+								self.attacker.isAlive = false
+							end
+							self.turnState.inCombat = false
+							gStateStack:pop()
+						end)
+					end)
+				end)
+			end
 		end)
 	end)
 end
@@ -67,8 +74,10 @@ function CombatState:calculateDamage(attacker, attackee)
 end
 
 function CombatState:checkForDeath(wizard)
-  -- check if health is 0
-  -- if health zero, return true else false
+	if wizard.health == 0 then
+		return true
+	end
+	return false
 end
 
 function CombatState:render()

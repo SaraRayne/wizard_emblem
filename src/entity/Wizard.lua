@@ -2,6 +2,7 @@ Wizard = Class{}
 
 function Wizard:init(def)
     self.direction = def.direction
+    self.isAlive = true
 
     self.animations = self:createAnimations(def.animations)
     self.blinking = false
@@ -79,13 +80,6 @@ function Wizard:takeDamage(damage)
     :finish(function() end)
     self.health = math.max(0, self.health - damage)
     return
-end
-
---[[
-    Called when we interact with this entity, as by pressing enter.
-]]
-function Wizard:onInteract()
-
 end
 
 function Wizard:processAI(params, dt)

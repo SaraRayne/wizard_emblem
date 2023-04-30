@@ -5,7 +5,7 @@ WIZARD_IDS = {
 WIZARD_DEFS = {
 	['fire'] = {
 		name = 'Fire Wizard',
-		health = 60,
+		health = 2,
 		attack = 10,
 		defense = 5,
 		waterMultiplier = -0.5,
@@ -15,7 +15,7 @@ WIZARD_DEFS = {
 	},
 	['water'] = {
 		name = 'Water Wizard',
-		health = 60,
+		health = 2,
 		attack = 10,
 		defense = 5,
 		waterMultiplier = 0,
@@ -25,7 +25,7 @@ WIZARD_DEFS = {
 	},
 	['ice'] = {
 		name = 'Ice Wizard',
-		health = 60,
+		health = 2,
 		attack = 10,
 		defense = 5,
 		waterMultiplier = 0.3,
@@ -35,7 +35,7 @@ WIZARD_DEFS = {
 	},
 	['lightning'] = {
 		name = 'Lightning Wizard',
-		health = 60,
+		health = 2,
 		attack = 10,
 		defense = 5,
 		waterMultiplier = 0.5,

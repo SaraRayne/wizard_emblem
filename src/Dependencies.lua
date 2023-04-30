@@ -23,6 +23,7 @@ require 'src/states/StateStack'
 
 require 'src/states/game/CombatState'
 require 'src/states/game/DialogueState'
+require 'src/states/game/EndGameState'
 require 'src/states/game/EnemyTurnState'
 require 'src/states/game/PlayState'
 require 'src/states/game/PlayerTurnState'

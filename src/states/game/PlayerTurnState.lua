@@ -2,7 +2,8 @@ PlayerTurnState = Class{__includes = BaseState}
 
 function PlayerTurnState:init(firstWizard, secondWizard, thirdWizard, playState)
 	self.playState = playState
-	self.enemies = {self.playState.gameboard.firstEnemyWizard, self.playState.gameboard.secondEnemyWizard, self.playState.gameboard.thirdEnemyWizard}
+	self.enemies = self.playState.gameboard.enemyWizards
+	self.inCombat = false
 	
 	-- position in the battle grid we're highlighting
 	self.boardHighlightX = 0
@@ -19,13 +20,22 @@ function PlayerTurnState:init(firstWizard, secondWizard, thirdWizard, playState)
 	-- Initialize variables for tracking movement
 	self.selectedWizard = nil
 	self.numWizardsMoved = 0
+	-- self.aliveWizards = self:countAliveWizards({self.firstWizard, self.secondWizard, self.thirdWizard})
 end
 
 function PlayerTurnState:enter()
 	gStateStack:push(DialogueState("Player Turn"))
+	-- Pop dialogue state after a few seconds
+	Timer.after(2, function() gStateStack:pop() end)
 end
 
 function PlayerTurnState:update(dt)
+	aliveWizards = self:countAliveWizards({self.firstWizard, self.secondWizard, self.thirdWizard})
+	if aliveWizards == 0 then
+		gStateStack:pop()
+		gStateStack:push(EndGameState("You have been defeated! Press Enter to try again."))
+	end
+
 	-- move cursor around based on bounds of battle grid
 	if love.keyboard.wasPressed('up') then
 		self.boardHighlightY = math.max(0, self.boardHighlightY - 1)
@@ -47,11 +57,13 @@ function PlayerTurnState:update(dt)
 				self.selectedWizard.mapY = self.boardHighlightY
 				self.selectedWizard.x = (self.selectedWizard.mapX - 1) * TILE_SIZE
 				self.selectedWizard.y = (self.selectedWizard.mapY - 1) * TILE_SIZE - self.selectedWizard.height / 2
-				self.numWizardsMoved = self.numWizardsMoved + 1
 				self.selectedWizard.canMove = false
 
 				-- Initiate combat with enemy
-				gStateStack:push(CombatState(self.selectedWizard, collidedEnemy, self.inCombat))
+				self.inCombat = true
+				gStateStack:push(CombatState(self.selectedWizard, collidedEnemy, self))
+				-- TODO: NEED TO WAIT FOR COMBAT TO FINISH, CAUSING STATE ISSUES
+				self.numWizardsMoved = self.numWizardsMoved + 1
 				self.selectedWizard = nil
 			else
 				-- Move wizard to selected location
@@ -76,7 +88,8 @@ function PlayerTurnState:update(dt)
 	self.secondWizard:update()
 	self.thirdWizard:update()
   
-	if self.numWizardsMoved == 3 then
+	if self.numWizardsMoved == aliveWizards and aliveWizards ~= 0 and self.inCombat == false then
+		print('Enemy Turn')
 		gStateStack:pop()
 		self.playState.turn = 'enemy'
 	end
@@ -105,6 +118,18 @@ function PlayerTurnState:checkCollision(x, y)
 		end
 	end
 	return nil
+end
+
+function PlayerTurnState:countAliveWizards(playerWizards)
+	local aliveCount = 0
+
+	for i, wizard in pairs(playerWizards) do
+		if wizard.isAlive then
+			aliveCount = aliveCount + 1
+		end
+	end
+
+	return aliveCount
 end
 
 function PlayerTurnState:render()

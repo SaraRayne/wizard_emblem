@@ -6,7 +6,8 @@ function DialogueState:init(text, callback)
 end
 
 function DialogueState:update(dt)
-    self.textbox:update(dt)
+    -- TODO: only update textbox if canInput?
+    -- self.textbox:update(dt)
 
     if self.textbox:isClosed() then
         self.callback()

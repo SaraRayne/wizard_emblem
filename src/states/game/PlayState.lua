@@ -3,7 +3,7 @@ PlayState = Class{__includes = BaseState}
 function PlayState:init()
     self.gameboard = Gameboard()
 
-	self.turn = 'player'
+		self.turn = 'player'
 
     -- TODO: Add music
     -- gSounds['field-music']:setLooping(true)
