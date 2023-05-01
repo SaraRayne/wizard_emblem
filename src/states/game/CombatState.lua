@@ -19,7 +19,6 @@ function CombatState:enter()
 			self.foe:takeDamage(damageToFoe)
 
 			if self:checkForDeath(self.foe) then
-				print('Foe Died')
 				Timer.after(2, function() 
 					self.foe.isAlive = false
 					self.turnState.inCombat = false
@@ -39,7 +38,6 @@ function CombatState:enter()
 
 						Timer.after(2, function() 
 							if self:checkForDeath(self.attacker) then
-								print('Attacker Died')
 								self.attacker.isAlive = false
 							end
 							self.turnState.inCombat = false

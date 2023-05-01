@@ -6,10 +6,12 @@ function DialogueState:init(text, callback)
 end
 
 function DialogueState:update(dt)
-    -- TODO: only update textbox if canInput?
-    -- self.textbox:update(dt)
+    if love.keyboard.wasPressed('space') then
+        self.textbox.closed = true
+    end
 
     if self.textbox:isClosed() then
+        print('textbox closed')
         self.callback()
         gStateStack:pop()
     end

@@ -20,20 +20,17 @@ function PlayerTurnState:init(firstWizard, secondWizard, thirdWizard, playState)
 	-- Initialize variables for tracking movement
 	self.selectedWizard = nil
 	self.numWizardsMoved = 0
-	-- self.aliveWizards = self:countAliveWizards({self.firstWizard, self.secondWizard, self.thirdWizard})
 end
 
 function PlayerTurnState:enter()
 	gStateStack:push(DialogueState("Player Turn"))
-	-- Pop dialogue state after a few seconds
-	Timer.after(2, function() gStateStack:pop() end)
 end
 
 function PlayerTurnState:update(dt)
 	aliveWizards = self:countAliveWizards({self.firstWizard, self.secondWizard, self.thirdWizard})
 	if aliveWizards == 0 then
 		gStateStack:pop()
-		gStateStack:push(EndGameState("You have been defeated! Press Enter to try again."))
+		gStateStack:push(EndGameState("You have been defeated! Press Space to try again."))
 	end
 
 	-- move cursor around based on bounds of battle grid

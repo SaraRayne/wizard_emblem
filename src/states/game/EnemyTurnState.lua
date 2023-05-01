@@ -3,6 +3,7 @@ EnemyTurnState = Class{__includes = BaseState}
 function EnemyTurnState:init(firstEnemy, secondEnemy, thirdEnemy, playState)
 	self.playState = playState
 	self.inCombat = false
+	self.openingDialogue = DialogueState("Enemy Turn")
 
 	-- define enemy wizards and allow movement by default
 	self.firstEnemy = firstEnemy
@@ -10,13 +11,14 @@ function EnemyTurnState:init(firstEnemy, secondEnemy, thirdEnemy, playState)
 	self.thirdEnemy = thirdEnemy
 
 	self.numWizardsMoved = 0
-	-- self.aliveWizards = self:countAliveWizards({self.firstEnemy, self.secondEnemy, self.thirdEnemy})
 end
 
 function EnemyTurnState:enter()
-	gStateStack:push(DialogueState("Enemy Turn"))
+	gStateStack:push(self.openingDialogue)
 	Timer.after(2, function() 
-		gStateStack:pop()
+		if self.openingDialogue.textbox.closed ~= true then
+			gStateStack:pop()
+		end
 		Timer.after(2, function()
 			self:moveEnemy(self.firstEnemy)
 			Timer.after(2, function()
@@ -33,7 +35,7 @@ function EnemyTurnState:update(dt)
 	aliveWizards = self:countAliveWizards({self.firstEnemy, self.secondEnemy, self.thirdEnemy})
 	if aliveWizards == 0 then
 		gStateStack:pop()
-		gStateStack:push(EndGameState("You win! Press Enter to play again."))
+		gStateStack:push(EndGameState("You win! Press Space to play again."))
 	end
 
 	self.firstEnemy:update()

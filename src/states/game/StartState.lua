@@ -14,8 +14,6 @@ function StartState:update(dt)
             "to defeat the enemy wizards! To move, select a player and use the arrow "..
             "keys to select a tile to move to, then press Enter. Good luck!"
         ))
-        -- Pop dialogue state after a few seconds
-        Timer.after(4, function() gStateStack:pop() end)
     end
 end
 
