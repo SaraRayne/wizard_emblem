@@ -33,8 +33,8 @@ require 'src/states/world/Gameboard'
 require 'src/states/world/Tile'
 
 gTextures = {
-  ['tiles'] = love.graphics.newImage('graphics/sheet.png'),
-  ['wizards'] = love.graphics.newImage('graphics/wizards.png'),
+  ['tiles'] = love.graphics.newImage('graphics/grass_tiles.png'),
+  ['wizards'] = love.graphics.newImage('graphics/tiny_sprites.png'),
 }
 
 gFrames = {

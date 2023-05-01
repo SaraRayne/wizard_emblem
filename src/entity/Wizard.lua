@@ -4,7 +4,8 @@ function Wizard:init(def)
     self.direction = def.direction
     self.isAlive = true
 
-    self.animations = self:createAnimations(def.animations)
+    -- self.animations = self:createAnimations(def.animations)
+    self.appearance = def.appearance
     self.blinking = false
 
     self.mapX = def.mapX
@@ -87,17 +88,19 @@ function Wizard:processAI(params, dt)
 end
 
 function Wizard:update(dt)
-    self.currentAnimation:update(dt)
-    self.stateMachine:update(dt)
+    -- self.currentAnimation:update(dt)
+    -- self.stateMachine:update(dt)
     self.healthBar:update(dt)
 end
 
 function Wizard:render()
+    love.graphics.draw(gTextures['wizards'], gFrames['wizards'][self.appearance],
+        self.x, self.y)
     -- if blinking is set to true, we'll send 1 to the white shader, which will
     -- convert every pixel of the sprite to pure white
     love.graphics.setShader(self.whiteShader)
     self.whiteShader:send('WhiteFactor', self.blinking and 1 or 0)
     
-    self.stateMachine:render()
+    -- self.stateMachine:render()
     self.healthBar:render()
 end
