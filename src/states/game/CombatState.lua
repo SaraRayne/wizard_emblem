@@ -12,12 +12,11 @@ function CombatState:enter()
 
 	-- Apply damage
 	Timer.after(1.5, function()
+		self.foe:takeDamage(damageToFoe)
 		Timer.tween(0.5, {
 			[self.foe.healthBar] = {value = self.foe.health - damageToFoe}
 		})
 		:finish(function()
-			self.foe:takeDamage(damageToFoe)
-
 			if self:checkForDeath(self.foe) then
 				Timer.after(2, function() 
 					self.foe.isAlive = false
@@ -30,12 +29,11 @@ function CombatState:enter()
 		
 				Timer.after(1.5, function()
 					-- Apply damage
+					self.attacker:takeDamage(damageToAttacker)
 					Timer.tween(0.5, {
 						[self.attacker.healthBar] = {value = self.attacker.health - damageToAttacker}
 					})
 					:finish(function()
-						self.attacker:takeDamage(damageToAttacker)
-
 						Timer.after(2, function() 
 							if self:checkForDeath(self.attacker) then
 								self.attacker.isAlive = false

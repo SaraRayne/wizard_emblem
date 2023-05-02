@@ -7,7 +7,6 @@ function Gameboard:init()
 
 	-- Initialize player wizards
 	self.firstPlayerWizard = Wizard {
-        -- animations = ENTITY_DEFS['player'].animations,
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
         mapX = 5,
         mapY = 3,
@@ -17,7 +16,6 @@ function Gameboard:init()
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.secondPlayerWizard = Wizard {
-        -- animations = ENTITY_DEFS['player'].animations,
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
         mapX = 12,
         mapY = 3,
@@ -27,7 +25,6 @@ function Gameboard:init()
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.thirdPlayerWizard = Wizard {
-        -- animations = ENTITY_DEFS['player'].animations,
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
         mapX = 20,
         mapY = 3,
@@ -37,24 +34,8 @@ function Gameboard:init()
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 
-	-- self.firstPlayerWizard.stateMachine = StateMachine {
-	-- 	['idle'] = function() return WizardIdleState(self.firstPlayerWizard, self) end
-	-- }
-    -- self.firstPlayerWizard.stateMachine:change('idle')
-
-	-- self.secondPlayerWizard.stateMachine = StateMachine {
-	-- 	['idle'] = function() return WizardIdleState(self.secondPlayerWizard, self) end
-	-- }
-    -- self.secondPlayerWizard.stateMachine:change('idle')
-
-	-- self.thirdPlayerWizard.stateMachine = StateMachine {
-	-- 	['idle'] = function() return WizardIdleState(self.thirdPlayerWizard, self) end
-	-- }
-    -- self.thirdPlayerWizard.stateMachine:change('idle')
-
 	-- -- Initialize enemy wizards
 	self.firstEnemyWizard = Wizard {
-        -- animations = ENTITY_DEFS['enemy'].animations,
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
         mapX = 5,
         mapY = 13,
@@ -64,7 +45,6 @@ function Gameboard:init()
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.secondEnemyWizard = Wizard {
-        -- animations = ENTITY_DEFS['enemy'].animations,
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
         mapX = 12,
         mapY = 13,
@@ -74,7 +54,6 @@ function Gameboard:init()
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.thirdEnemyWizard = Wizard {
-        -- animations = ENTITY_DEFS['enemy'].animations,
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
         mapX = 20,
         mapY = 13,
@@ -84,22 +63,6 @@ function Gameboard:init()
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 
-	-- self.firstEnemyWizard.stateMachine = StateMachine {
-	-- 	['idle'] = function() return WizardIdleState(self.firstEnemyWizard, self) end
-	-- }
-    -- self.firstEnemyWizard.stateMachine:change('idle')
-
-	-- self.secondEnemyWizard.stateMachine = StateMachine {
-	-- 	['idle'] = function() return WizardIdleState(self.secondEnemyWizard, self) end
-	-- }
-    -- self.secondEnemyWizard.stateMachine:change('idle')
-
-	-- self.thirdEnemyWizard.stateMachine = StateMachine {
-	-- 	['idle'] = function() return WizardIdleState(self.thirdEnemyWizard, self) end
-	-- }
-	-- self.thirdEnemyWizard.stateMachine:change('idle')
-
-	-- Add all wizards to table
 	self.playerWizards = {
 		self.firstPlayerWizard,
 		self.secondPlayerWizard,
@@ -116,7 +79,6 @@ function Gameboard:init()
 end
 
 function Gameboard:createGrid()
-	-- TODO: put correct field tiles on board
 	for y = 1, self.tileHeight do
 		table.insert(self.tiles, {})
 

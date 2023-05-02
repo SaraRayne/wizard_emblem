@@ -19,12 +19,16 @@ function EnemyTurnState:enter()
 		if self.openingDialogue.textbox.closed ~= true then
 			gStateStack:pop()
 		end
-		Timer.after(2, function()
+		Timer.after(3, function()
 			self:moveEnemy(self.firstEnemy)
-			Timer.after(2, function()
+			Timer.after(3, function()
 				self:moveEnemy(self.secondEnemy)
-				Timer.after(2, function()
+				Timer.after(3, function()
 					self:moveEnemy(self.thirdEnemy)
+					Timer.after(3, function()
+							gStateStack:pop()
+							self.playState.turn = 'player'
+					end)
 				end)
 			end)
 		end)
@@ -35,18 +39,17 @@ function EnemyTurnState:update(dt)
 	aliveWizards = self:countAliveWizards({self.firstEnemy, self.secondEnemy, self.thirdEnemy})
 	if aliveWizards == 0 then
 		gStateStack:pop()
-		gStateStack:push(EndGameState("You win! Press Space to play again."))
+		gStateStack:push(EndGameState("You win! Press Space to play again.", true))
 	end
 
 	self.firstEnemy:update()
 	self.secondEnemy:update()
 	self.thirdEnemy:update()
 
-	if self.numWizardsMoved == aliveWizards and aliveWizards ~= 0 and self.inCombat == false then
-		print('Player Turn')
-		gStateStack:pop()
-		self.playState.turn = 'player'
-	end 
+	-- if self.numWizardsMoved == aliveWizards and aliveWizards ~= 0 and self.inCombat == false then
+	-- 	gStateStack:pop()
+	-- 	self.playState.turn = 'player'
+	-- end 
 end
 
 function EnemyTurnState:moveEnemy(enemy)

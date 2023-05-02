@@ -4,10 +4,6 @@ function PlayState:init()
     self.gameboard = Gameboard()
 
 		self.turn = 'player'
-
-    -- TODO: Add music
-    -- gSounds['field-music']:setLooping(true)
-    -- gSounds['field-music']:play()
 end
 
 function PlayState:update(dt)

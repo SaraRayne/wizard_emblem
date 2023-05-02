@@ -30,7 +30,7 @@ function PlayerTurnState:update(dt)
 	aliveWizards = self:countAliveWizards({self.firstWizard, self.secondWizard, self.thirdWizard})
 	if aliveWizards == 0 then
 		gStateStack:pop()
-		gStateStack:push(EndGameState("You have been defeated! Press Space to try again."))
+		gStateStack:push(EndGameState("You have been defeated! Press Space to try again.", false))
 	end
 
 	-- move cursor around based on bounds of battle grid
@@ -59,7 +59,6 @@ function PlayerTurnState:update(dt)
 				-- Initiate combat with enemy
 				self.inCombat = true
 				gStateStack:push(CombatState(self.selectedWizard, collidedEnemy, self))
-				-- TODO: NEED TO WAIT FOR COMBAT TO FINISH, CAUSING STATE ISSUES
 				self.numWizardsMoved = self.numWizardsMoved + 1
 				self.selectedWizard = nil
 			else
@@ -86,7 +85,6 @@ function PlayerTurnState:update(dt)
 	self.thirdWizard:update()
   
 	if self.numWizardsMoved == aliveWizards and aliveWizards ~= 0 and self.inCombat == false then
-		print('Enemy Turn')
 		gStateStack:pop()
 		self.playState.turn = 'enemy'
 	end

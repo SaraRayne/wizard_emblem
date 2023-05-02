@@ -1,10 +1,16 @@
 EndGameState = Class{__includes = BaseState}
 
-function EndGameState:init(message)
+function EndGameState:init(message, victory)
   	self.message = DialogueState(message)
+	self.victory = victory
 end
 
 function EndGameState:enter()
+	if victory then
+		gSounds['victory']:play()
+	else
+		gSounds['game-over']:play()
+	end
     gStateStack:push(self.message)
 end
 

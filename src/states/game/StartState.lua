@@ -1,9 +1,8 @@
 StartState = Class{__includes = BaseState}
 
 function StartState:init()
-    -- TODO: ADD INTRO MUSIC
-    -- gSounds['intro-music']:play()
-
+    gSounds['background-music']:setLooping(true)
+    gSounds['background-music']:play()
 end
 
 function StartState:update(dt)
@@ -12,12 +11,12 @@ function StartState:update(dt)
         gStateStack:push(DialogueState("" .. 
             "This is Wizard Emblem. You control a team of wizards with one goal: "..
             "to defeat the enemy wizards! To move, select a player and use the arrow "..
-            "keys to select a tile to move to, then press Enter. Good luck!"
+            "keys to select a tile to move to, then press Enter. Press Space to dismiss dialogue. "..
+            "Good luck!"
         ))
     end
 end
 
--- TODO: Make start state prettier (not just a boring background)
 function StartState:render()
     love.graphics.clear(188/255, 188/255, 188/255, 1)
 

@@ -4,7 +4,6 @@ function Wizard:init(def)
     self.direction = def.direction
     self.isAlive = true
 
-    -- self.animations = self:createAnimations(def.animations)
     self.appearance = def.appearance
     self.blinking = false
 
@@ -50,29 +49,8 @@ function Wizard:init(def)
     ]]
 end
 
-function Wizard:changeState(name)
-    self.stateMachine:change(name)
-end
-
-function Wizard:changeAnimation(name)
-    self.currentAnimation = self.animations[name]
-end
-
-function Wizard:createAnimations(animations)
-    local animationsReturned = {}
-
-    for k, animationDef in pairs(animations) do
-        animationsReturned[k] = Animation {
-            texture = animationDef.texture or 'wizards',
-            frames = animationDef.frames,
-            interval = animationDef.interval
-        }
-    end
-
-    return animationsReturned
-end
-
 function Wizard:takeDamage(damage)
+    gSounds['damage']:play()
     -- blink the attacker sprite three times (turn on and off blinking 6 times)
     Timer.every(0.1, function()
         self.blinking = not self.blinking
@@ -83,24 +61,18 @@ function Wizard:takeDamage(damage)
     return
 end
 
-function Wizard:processAI(params, dt)
-    self.stateMachine:processAI(params, dt)
-end
-
 function Wizard:update(dt)
-    -- self.currentAnimation:update(dt)
-    -- self.stateMachine:update(dt)
     self.healthBar:update(dt)
 end
 
 function Wizard:render()
-    love.graphics.draw(gTextures['wizards'], gFrames['wizards'][self.appearance],
-        self.x, self.y)
     -- if blinking is set to true, we'll send 1 to the white shader, which will
     -- convert every pixel of the sprite to pure white
     love.graphics.setShader(self.whiteShader)
     self.whiteShader:send('WhiteFactor', self.blinking and 1 or 0)
+
+    love.graphics.draw(gTextures['wizards'], gFrames['wizards'][self.appearance],
+        self.x, self.y)
     
-    -- self.stateMachine:render()
     self.healthBar:render()
 end
