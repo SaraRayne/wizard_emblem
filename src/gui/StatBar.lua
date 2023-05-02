@@ -12,6 +12,8 @@ function StatBar:init(def)
 
     self.value = def.value
     self.max = def.max
+
+    self.type = def.type
 end
 
 function StatBar:setMax(max)
@@ -22,9 +24,13 @@ function StatBar:setValue(value)
     self.value = value
 end
 
-function StatBar:update()
+function StatBar:update(dt)
     self.x = (self.wizard.mapX) * TILE_SIZE - 20
-    self.y = (self.wizard.mapY) * TILE_SIZE - (self.wizard.height * 2)
+    if self.type == 'health' then
+        self.y = (self.wizard.mapY) * TILE_SIZE - (self.wizard.height * 2)
+    else
+        self.y = ((self.wizard.mapY) * TILE_SIZE - (self.wizard.height * 2)) + 3
+    end
 end
 
 function StatBar:render()

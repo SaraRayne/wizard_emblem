@@ -21,13 +21,16 @@ function EnemyTurnState:enter()
 		end
 		Timer.after(3, function()
 			self:moveEnemy(self.firstEnemy)
+			self.firstEnemy:update()
 			Timer.after(3, function()
 				self:moveEnemy(self.secondEnemy)
+				self.secondEnemy:update()
 				Timer.after(3, function()
 					self:moveEnemy(self.thirdEnemy)
+					self.thirdEnemy:update()
 					Timer.after(3, function()
-							gStateStack:pop()
-							self.playState.turn = 'player'
+						gStateStack:pop()
+						self.playState.turn = 'player'
 					end)
 				end)
 			end)
@@ -45,11 +48,6 @@ function EnemyTurnState:update(dt)
 	self.firstEnemy:update()
 	self.secondEnemy:update()
 	self.thirdEnemy:update()
-
-	-- if self.numWizardsMoved == aliveWizards and aliveWizards ~= 0 and self.inCombat == false then
-	-- 	gStateStack:pop()
-	-- 	self.playState.turn = 'player'
-	-- end 
 end
 
 function EnemyTurnState:moveEnemy(enemy)
@@ -65,9 +63,10 @@ function EnemyTurnState:moveEnemy(enemy)
 	local collidedPlayer = self:checkCollision(x, y, players)
 
 	if collidedPlayer then
-		-- Move to nearby tile
-		enemy.mapX = x
-		enemy.mapY = y + 1
+		-- Move to nearby unoccupied tile
+		xPos, yPos = self:findUnoccupiedTile(x, y, players)
+		enemy.mapX = xPos
+		enemy.mapY = yPos
 		enemy.x = (enemy.mapX - 1) * TILE_SIZE
 		enemy.y = (enemy.mapY - 1) * TILE_SIZE - enemy.height / 2
 		self.numWizardsMoved = self.numWizardsMoved + 1
@@ -129,6 +128,23 @@ function EnemyTurnState:findClosestTileToPlayer(enemy, closestPlayer)
 	end
 
 	return xPos, yPos
+end
+
+function EnemyTurnState:findUnoccupiedTile(x, y, alivePlayers)
+	local aliveEnemies = {self.firstEnemy, self.secondEnemy, self.thirdEnemy}
+	local nearbyXTiles = {x, x + 1, x - 1}
+	local nearbyYTiles = {y, y + 1, y - 1}
+
+	for i, xPos in pairs(nearbyXTiles) do
+		for k, yPos in pairs(nearbyYTiles) do
+			local occupiedByPlayer = self:checkCollision(xPos, yPos, alivePlayers)
+			local occupiedByEnemy = self:checkCollision(xPos, yPos, aliveEnemies)
+			if occupiedByPlayer == nil and occupiedByEnemy == nil then
+				return xPos, yPos
+			end
+		end
+	end
+	return x, y
 end
 
 function EnemyTurnState:checkCollision(x, y, players)

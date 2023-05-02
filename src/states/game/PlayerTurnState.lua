@@ -47,11 +47,12 @@ function PlayerTurnState:update(dt)
 	-- Move wizards
 	if love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter') then
 		if self.selectedWizard ~= nil and self:checkBounds(self.selectedWizard.mapX, self.selectedWizard.mapY, self.boardHighlightX + 1, self.boardHighlightY + 1) then
-			local collidedEnemy = self:checkCollision(self.boardHighlightX + 1, self.boardHighlightY + 1) 
+			local collidedEnemy = self:checkCollision(self.boardHighlightX + 1, self.boardHighlightY + 1, self.enemies) 
 			if collidedEnemy then
-				-- Move to nearby tile
-				self.selectedWizard.mapX = self.boardHighlightX + 1
-				self.selectedWizard.mapY = self.boardHighlightY
+				-- Move to nearby unoccupied tile
+				xPos, yPos = self:findUnoccupiedTile(self.boardHighlightX + 1, self.boardHighlightY + 1)
+				self.selectedWizard.mapX = xPos
+				self.selectedWizard.mapY = yPos
 				self.selectedWizard.x = (self.selectedWizard.mapX - 1) * TILE_SIZE
 				self.selectedWizard.y = (self.selectedWizard.mapY - 1) * TILE_SIZE - self.selectedWizard.height / 2
 				self.selectedWizard.canMove = false
@@ -106,10 +107,28 @@ function PlayerTurnState:checkBounds(currentX, currentY, newX, newY)
 	end
 end
 
-function PlayerTurnState:checkCollision(x, y)
-	for i, enemy in pairs(self.enemies) do
-		if x == enemy.mapX and y == enemy.mapY then
-			return enemy
+function PlayerTurnState:findUnoccupiedTile(x, y)
+	local aliveEnemies = self.enemies
+	local players = {self.firstWizard, self.secondWizard, self.thirdWizard}
+	local nearbyXTiles = {x, x + 1, x - 1}
+	local nearbyYTiles = {y, y + 1, y - 1}
+
+	for i, xPos in pairs(nearbyXTiles) do
+		for k, yPos in pairs(nearbyYTiles) do
+			local occupiedByPlayer = self:checkCollision(xPos, yPos, players)
+			local occupiedByEnemy = self:checkCollision(xPos, yPos, aliveEnemies)
+			if occupiedByPlayer == nil and occupiedByEnemy == nil then
+				return xPos, yPos
+			end
+		end
+	end
+	return x, y
+end
+
+function PlayerTurnState:checkCollision(x, y, characters)
+	for i, character in pairs(characters) do
+		if x == character.mapX and y == character.mapY then
+			return character
 		end
 	end
 	return nil

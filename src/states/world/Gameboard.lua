@@ -12,7 +12,6 @@ function Gameboard:init()
         mapY = 3,
         width = 16,
         height = 16,
-		direction = 'down',
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.secondPlayerWizard = Wizard {
@@ -21,7 +20,6 @@ function Gameboard:init()
         mapY = 3,
         width = 16,
         height = 16,
-		direction = 'down',
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.thirdPlayerWizard = Wizard {
@@ -30,7 +28,6 @@ function Gameboard:init()
         mapY = 3,
         width = 16,
         height = 16,
-		direction = 'down',
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 
@@ -41,7 +38,6 @@ function Gameboard:init()
         mapY = 13,
         width = 16,
         height = 16,
-		direction = 'up',
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.secondEnemyWizard = Wizard {
@@ -50,7 +46,6 @@ function Gameboard:init()
         mapY = 13,
         width = 16,
         height = 16,
-		direction = 'up',
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 	self.thirdEnemyWizard = Wizard {
@@ -59,7 +54,6 @@ function Gameboard:init()
         mapY = 13,
         width = 16,
         height = 16,
-		direction = 'up',
 		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
     }
 

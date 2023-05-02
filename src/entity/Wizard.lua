@@ -34,7 +34,20 @@ function Wizard:init(def)
         color = {r = 189/255, g = 32/255, b = 32/255},
         value = self.health,
         max = 60,
-        wizard = self
+        wizard = self,
+        type = 'health'
+    }
+
+    self.magicBar = StatBar {
+        x = (self.mapX) * TILE_SIZE - 20,
+        y = ((self.mapY) * TILE_SIZE - (self.height * 2)) + 3,
+        width = 24,
+        height = 3,
+        color = def.stats.color,
+        value = 60,
+        max = 60,
+        wizard = self,
+        type = 'magic'
     }
 
     self.whiteShader = love.graphics.newShader[[
@@ -63,6 +76,7 @@ end
 
 function Wizard:update(dt)
     self.healthBar:update(dt)
+    self.magicBar:update(dt)
 end
 
 function Wizard:render()
@@ -75,4 +89,5 @@ function Wizard:render()
         self.x, self.y)
     
     self.healthBar:render()
+    self.magicBar:render()
 end
