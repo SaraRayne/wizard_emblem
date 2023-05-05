@@ -44,7 +44,7 @@ gFonts = {
 }
 
 gSounds = {
-  	['background-music'] = love.audio.newSource('sounds/background_music.mp3', 'static'),
+  ['background-music'] = love.audio.newSource('sounds/background_music.mp3', 'static'),
 	['damage'] = love.audio.newSource('sounds/damage.wav', 'static'),
 	['game-over'] = love.audio.newSource('sounds/sad_game_over.wav', 'static'),
 	['victory'] = love.audio.newSource('sounds/victory.wav', 'static')

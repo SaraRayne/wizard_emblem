@@ -64,7 +64,7 @@ function EnemyTurnState:moveEnemy(enemy)
 
 	if collidedPlayer then
 		-- Move to nearby unoccupied tile
-		xPos, yPos = self:findUnoccupiedTile(x, y, players)
+		xPos, yPos = self:findUnoccupiedTile(x, y, players, enemy)
 		enemy.mapX = xPos
 		enemy.mapY = yPos
 		enemy.x = (enemy.mapX - 1) * TILE_SIZE
@@ -130,15 +130,15 @@ function EnemyTurnState:findClosestTileToPlayer(enemy, closestPlayer)
 	return xPos, yPos
 end
 
-function EnemyTurnState:findUnoccupiedTile(x, y, alivePlayers)
+function EnemyTurnState:findUnoccupiedTile(x, y, alivePlayers, movingWizard)
 	local aliveEnemies = {self.firstEnemy, self.secondEnemy, self.thirdEnemy}
 	local nearbyXTiles = {x, x + 1, x - 1}
-	local nearbyYTiles = {y, y + 1, y - 1}
+	local nearbyYTiles = {y + 1, y, y - 1}
 
 	for i, xPos in pairs(nearbyXTiles) do
 		for k, yPos in pairs(nearbyYTiles) do
-			local occupiedByPlayer = self:checkCollision(xPos, yPos, alivePlayers)
-			local occupiedByEnemy = self:checkCollision(xPos, yPos, aliveEnemies)
+			local occupiedByPlayer = self:checkCollision(xPos, yPos, alivePlayers, movingWizard)
+			local occupiedByEnemy = self:checkCollision(xPos, yPos, aliveEnemies, movingWizard)
 			if occupiedByPlayer == nil and occupiedByEnemy == nil then
 				return xPos, yPos
 			end
@@ -147,9 +147,9 @@ function EnemyTurnState:findUnoccupiedTile(x, y, alivePlayers)
 	return x, y
 end
 
-function EnemyTurnState:checkCollision(x, y, players)
+function EnemyTurnState:checkCollision(x, y, players, movingWizard)
 	for i, player in pairs(players) do
-		if x == player.mapX and y == player.mapY and player.isAlive then
+		if x == player.mapX and y == player.mapY and player.isAlive and player ~= movingWizard then
 			return player
 		end
 	end

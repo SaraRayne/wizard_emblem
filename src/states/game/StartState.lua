@@ -9,9 +9,9 @@ function StartState:update(dt)
     if love.keyboard.wasPressed('space') then
         gStateStack:push(PlayState())
         gStateStack:push(DialogueState("" .. 
-            "This is Wizard Emblem. You control a team of wizards with one goal: "..
-            "to defeat the enemy wizards! To move, select a player and use the arrow "..
-            "keys to select a tile to move to, then press Enter. Press Space to dismiss dialogue. "..
+            "This is Wizard Emblem. You have one goal: to defeat the enemy wizards! "..
+            "To move, select a wizard under your control (one with a green health bar) "..
+            "and use the arrow keys to select a location, then press Enter. Press Space to dismiss dialogue. "..
             "Good luck!"
         ))
     end

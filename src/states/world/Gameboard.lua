@@ -12,7 +12,8 @@ function Gameboard:init()
         mapY = 3,
         width = 16,
         height = 16,
-		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]],
+		healthColor = {r = 0/255, g = 128/255, b = 0/255}
     }
 	self.secondPlayerWizard = Wizard {
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
@@ -20,7 +21,8 @@ function Gameboard:init()
         mapY = 3,
         width = 16,
         height = 16,
-		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]],
+		healthColor = {r = 0/255, g = 128/255, b = 0/255}
     }
 	self.thirdPlayerWizard = Wizard {
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
@@ -28,7 +30,8 @@ function Gameboard:init()
         mapY = 3,
         width = 16,
         height = 16,
-		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]],
+		healthColor = {r = 0/255, g = 128/255, b = 0/255}
     }
 
 	-- -- Initialize enemy wizards
@@ -38,7 +41,8 @@ function Gameboard:init()
         mapY = 13,
         width = 16,
         height = 16,
-		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]],
+		healthColor = {r = 189/255, g = 32/255, b = 32/255}
     }
 	self.secondEnemyWizard = Wizard {
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
@@ -46,7 +50,8 @@ function Gameboard:init()
         mapY = 13,
         width = 16,
         height = 16,
-		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]],
+		healthColor = {r = 189/255, g = 32/255, b = 32/255}
     }
 	self.thirdEnemyWizard = Wizard {
 		appearance = ENTITY_IDS['characters'][math.random(#ENTITY_IDS['characters'])],
@@ -54,7 +59,8 @@ function Gameboard:init()
         mapY = 13,
         width = 16,
         height = 16,
-		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]]
+		stats = WIZARD_DEFS[WIZARD_IDS[math.random(#WIZARD_IDS)]],
+		healthColor = {r = 189/255, g = 32/255, b = 32/255}
     }
 
 	self.playerWizards = {

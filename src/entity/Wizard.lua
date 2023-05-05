@@ -1,7 +1,6 @@
 Wizard = Class{}
 
 function Wizard:init(def)
-    self.direction = def.direction
     self.isAlive = true
 
     self.appearance = def.appearance
@@ -19,6 +18,7 @@ function Wizard:init(def)
 
     self.magicType = def.stats.name
     self.health = def.stats.health
+    self.healthColor = def.healthColor
     self.attack = def.stats.attack
     self.defense = def.stats.defense
     self.waterMultiplier = def.stats.waterMultiplier
@@ -31,7 +31,7 @@ function Wizard:init(def)
         y = (self.mapY) * TILE_SIZE - (self.height * 2),
         width = 24,
         height = 3,
-        color = {r = 189/255, g = 32/255, b = 32/255},
+        color = self.healthColor,
         value = self.health,
         max = 60,
         wizard = self,

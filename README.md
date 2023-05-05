@@ -4,8 +4,8 @@
 
 1. Run the game by calling `love .` from the top level
 2. From the title screen, press space to start the game
-3. You'll be presented with a battle board with 3 wizards at the top of the screen, and 3 wizards at the bottom. The top wizards are under your control; the bottom are controlled by the computer. 
-4. Each wizard has two bars over its head. The topmost red bar is a health bar. The bottom bar indicates the wizard's magic type (see more on magic types below).
+3. You'll be presented with a battle board with 3 wizards at the top of the screen, and 3 wizards at the bottom. The top wizards with green health bars are under your control; the bottom with red health bars are controlled by the computer. 
+4. Each wizard has two bars over its head. The topmost bar is a health bar. The bottom bar indicates the wizard's magic type (see more on magic types below).
 
 ## Player Turn
 

@@ -50,7 +50,7 @@ function PlayerTurnState:update(dt)
 			local collidedEnemy = self:checkCollision(self.boardHighlightX + 1, self.boardHighlightY + 1, self.enemies) 
 			if collidedEnemy then
 				-- Move to nearby unoccupied tile
-				xPos, yPos = self:findUnoccupiedTile(self.boardHighlightX + 1, self.boardHighlightY + 1)
+				xPos, yPos = self:findUnoccupiedTile(self.boardHighlightX + 1, self.boardHighlightY + 1, self.selectedWizard)
 				self.selectedWizard.mapX = xPos
 				self.selectedWizard.mapY = yPos
 				self.selectedWizard.x = (self.selectedWizard.mapX - 1) * TILE_SIZE
@@ -107,16 +107,16 @@ function PlayerTurnState:checkBounds(currentX, currentY, newX, newY)
 	end
 end
 
-function PlayerTurnState:findUnoccupiedTile(x, y)
+function PlayerTurnState:findUnoccupiedTile(x, y, movingWizard)
 	local aliveEnemies = self.enemies
 	local players = {self.firstWizard, self.secondWizard, self.thirdWizard}
 	local nearbyXTiles = {x, x + 1, x - 1}
-	local nearbyYTiles = {y, y + 1, y - 1}
+	local nearbyYTiles = {y - 1, y, y + 1}
 
 	for i, xPos in pairs(nearbyXTiles) do
 		for k, yPos in pairs(nearbyYTiles) do
-			local occupiedByPlayer = self:checkCollision(xPos, yPos, players)
-			local occupiedByEnemy = self:checkCollision(xPos, yPos, aliveEnemies)
+			local occupiedByPlayer = self:checkCollision(xPos, yPos, players, movingWizard)
+			local occupiedByEnemy = self:checkCollision(xPos, yPos, aliveEnemies, movingWizard)
 			if occupiedByPlayer == nil and occupiedByEnemy == nil then
 				return xPos, yPos
 			end
@@ -125,9 +125,9 @@ function PlayerTurnState:findUnoccupiedTile(x, y)
 	return x, y
 end
 
-function PlayerTurnState:checkCollision(x, y, characters)
+function PlayerTurnState:checkCollision(x, y, characters, movingWizard)
 	for i, character in pairs(characters) do
-		if x == character.mapX and y == character.mapY then
+		if x == character.mapX and y == character.mapY and character ~= movingWizard then
 			return character
 		end
 	end

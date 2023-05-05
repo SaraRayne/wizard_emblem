@@ -11,7 +11,7 @@ WIZARD_DEFS = {
 		defense = 5,
 		waterMultiplier = -0.5,
 		fireMultiplier = 0,
-		iceMultiplier = 0.5,
+		iceMultiplier = 0.3,
 		lightningMultiplier = 0
 	},
 	['water'] = {
@@ -22,8 +22,8 @@ WIZARD_DEFS = {
 		defense = 5,
 		waterMultiplier = 0,
 		fireMultiplier = 0.5,
-		iceMultiplier = -0.3,
-		lightningMultiplier = -0.5
+		iceMultiplier = -0.2,
+		lightningMultiplier = -0.3
 	},
 	['ice'] = {
 		name = 'Ice Wizard',
@@ -31,8 +31,8 @@ WIZARD_DEFS = {
 		health = 60,
 		attack = 10,
 		defense = 5,
-		waterMultiplier = 0.3,
-		fireMultiplier = -0.5,
+		waterMultiplier = 0.2,
+		fireMultiplier = -0.3,
 		iceMultiplier = 0,
 		lightningMultiplier = 0
 	},
