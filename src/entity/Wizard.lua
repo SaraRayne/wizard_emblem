@@ -64,7 +64,7 @@ end
 
 function Wizard:takeDamage(damage)
     gSounds['damage']:play()
-    -- blink the attacker sprite three times (turn on and off blinking 6 times)
+    
     Timer.every(0.1, function()
         self.blinking = not self.blinking
     end)
@@ -80,8 +80,6 @@ function Wizard:update(dt)
 end
 
 function Wizard:render()
-    -- if blinking is set to true, we'll send 1 to the white shader, which will
-    -- convert every pixel of the sprite to pure white
     love.graphics.setShader(self.whiteShader)
     self.whiteShader:send('WhiteFactor', self.blinking and 1 or 0)
 
